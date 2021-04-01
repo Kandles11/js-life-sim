@@ -6,7 +6,8 @@ function initialize() {
         uniday: 0
     }
     peep = {
-        hunger: 100,
+        hunger: 97,
+        energy: 80,
         actionQueue: [],
         queueProgress: []
 
@@ -17,7 +18,6 @@ initialize()
 
 var mainLoop = setInterval(function() {
     time.unit += 1
-    peep.hunger -= .001
     peepBrain()
     time = convertTime(time)
     renderElements(time)
@@ -44,16 +44,28 @@ function renderElements() {
     document.getElementById("unibitBar").setAttribute("value", time.unibit);
     document.getElementById("unibyteBar").setAttribute("value", time.unibyte);
     document.getElementById("unidayBar").setAttribute("value", time.uniday);
-    document.getElementById("hungerBar").setAttribute("value", peep.hunger);
     document.getElementById("peepHunger").innerHTML = Math.round(peep.hunger * 100)/100
+    document.getElementById("hungerBar").setAttribute("value", peep.hunger);
+    document.getElementById("peepEnergy").innerHTML = Math.round(peep.energy * 100)/100
+    document.getElementById("energyBar").setAttribute("value", peep.energy);
     document.getElementById("peepActions").innerHTML = peep.actionQueue
     document.getElementById("queueProgress").innerHTML = peep.queueProgress
 
 }
 
 function peepBrain() {
+    deductNeeds();
     addToQueue();
     performAction();
+}
+
+function deductNeeds() {
+    if (peep.actionQueue[0] == "sleep") {
+        peep.hunger -= .0005
+        return
+    }
+    peep.hunger -= .001
+    peep.energy -= .001
 }
 
 function addToQueue() {
@@ -91,16 +103,37 @@ function addToQueue() {
             }
         }
     }
+    if (peep.energy < 30) {
+        if (!peep.actionQueue.includes("sleep")) {
+                peep.actionQueue.push("sleep")
+                peep.queueProgress.push(300)
+                console.log('add sleep')
+                return
+        }
+    }
 }
 
 function performAction() {
     action = peep.actionQueue[0]
+    console.log(action)
     if (action == "eat") {
-        if (peep.queueProgress <= 0) {
+        if (peep.queueProgress[0] <= 0) {
             peep.actionQueue.shift();
             peep.queueProgress.shift();
             return;
         }
         peep.hunger += .02;
         peep.queueProgress[0]  -= .01;
+    }    
+    if (action == "sleep") {
+        console.log('got to sleep')
+        if (peep.queueProgress[0] <= 0) {
+            peep.actionQueue.shift();
+            peep.queueProgress.shift();
+            return;
+        }
+        console.log('got to sleep')
+        peep.energy += .0023333;
+        peep.queueProgress[0]  -= .01;
+    
 }}

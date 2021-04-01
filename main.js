@@ -7,7 +7,9 @@ function initialize() {
     }
     peep = {
         hunger: 100,
-        actionQueue: []
+        actionQueue: [],
+        queueProgress: []
+
     }
 }
 
@@ -31,29 +33,34 @@ function convertTime(time){
         time.unibyte += 1;
     }
     if (time.unibyte==10) {
-        time.unibit = 0;
+        time.unibyte = 0;
         time.uniday += 1;
     }
     return time
 }
 
 function renderElements() {
-    document.getElementById("units").innerHTML = time.unit;
-    document.getElementById("unibits").innerHTML = time.unibit;
-    document.getElementById("unibytes").innerHTML = time.unibyte;
-    document.getElementById("unidays").innerHTML = time.uniday;
+    document.getElementById("unitBar").setAttribute("value", time.unit);
+    document.getElementById("unibitBar").setAttribute("value", time.unibit);
+    document.getElementById("unibyteBar").setAttribute("value", time.unibyte);
+    document.getElementById("unidayBar").setAttribute("value", time.uniday);
+    document.getElementById("hungerBar").setAttribute("value", peep.hunger);
     document.getElementById("peepHunger").innerHTML = Math.round(peep.hunger * 100)/100
     document.getElementById("peepActions").innerHTML = peep.actionQueue
+    document.getElementById("queueProgress").innerHTML = peep.queueProgress
+
 }
 
 function peepBrain() {
-    addToQueue()
+    addToQueue();
+    performAction();
 }
 
 function addToQueue() {
     if (peep.hunger < 40) {
         if (!peep.actionQueue.includes("eat")) {
             peep.actionQueue.push("eat")
+            peep.queueProgress.push(10)
             return
         }
     }
@@ -61,6 +68,7 @@ function addToQueue() {
         if (!peep.actionQueue.includes("eat")) {
             if (Math.random() < 0.0005) {
                 peep.actionQueue.push("eat")
+                peep.queueProgress.push(10)
                 return
             }
         }
@@ -69,6 +77,7 @@ function addToQueue() {
         if (!peep.actionQueue.includes("eat")) {
             if (Math.random() < 0.0003) {
                 peep.actionQueue.push("eat")
+                peep.queueProgress.push(10)
                 return
             }
         }
@@ -77,8 +86,21 @@ function addToQueue() {
         if (!peep.actionQueue.includes("eat")) {
             if (Math.random() < 0.0001) {
                 peep.actionQueue.push("eat")
+                peep.queueProgress.push(10)
                 return
             }
         }
     }
 }
+
+function performAction() {
+    action = peep.actionQueue[0]
+    if (action == "eat") {
+        if (peep.queueProgress <= 0) {
+            peep.actionQueue.shift();
+            peep.queueProgress.shift();
+            return;
+        }
+        peep.hunger += .02;
+        peep.queueProgress[0]  -= .01;
+}}

@@ -8,12 +8,16 @@
   </head>
   <body>
     <h1>life sim</h1>
-    <h1>units: <span id="units"></span></h1>
-    <h1>unibits: <span id="unibits"></span></h1>
-    <h1>unibytes: <span id="unibytes"></span></h1>
-    <h1>unidays: <span id="unidays"></span></h1>
-    <h1>peephunger: <span id="peepHunger"></span></h1>
-    <h1>peepActions: <span id="peepActions"></span></h1>
+    <h2>time:</h2>
+    <label>units: </label><progress id=unitBar max="100"></progress><label>100</label><br>
+    <label>unibits: </label><progress id=unibitBar max="100"></progress><label>100</label><br>
+    <label>unibytes: </label><progress id=unibyteBar max="10"></progress><label>10</label><br>
+    <label>unidays: </label><progress id=unidayBar max="10"></progress><label>10</label><br>
+    <h2>peep status:</h2>
+    <label>hunger: </label><label id="peepHunger"></label><br><progress id=hungerBar max="100"></progress><label>100</label><br>
+    <h3>peepActions: <span id="peepActions"></span></h3>
+    <h3>queueProgress: <span id="queueProgress"></span></h3>
+
 
   </body>
   <script src="main.js"></script>
